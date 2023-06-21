@@ -1,19 +1,17 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient, Role } = require('@prisma/client');
 const prisma = new PrismaClient();
 const crypto = require('crypto');
 
 const signup = async (req, res) => {
   try {
-    const { email, password, name, Address, birth, gender } = req.body;
+    const { email, password, name, Address, birth, gender, role: userRole } = req.body;
 
-   const ifUser = await prisma.user.findFirst({
-    where:{
-        email   
-    }
-   })
-    console.log(ifUser);
+    const ifUser = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
 
-    console.log(`ifUser === null : ${ifUser === null}`);
     if (ifUser !== null) {
       return res.status(409).json({
         message: "이미 존재하는 이메일입니다.",
@@ -30,6 +28,12 @@ const signup = async (req, res) => {
       .update(password)
       .digest('base64');
 
+    let role = Role.USER;
+
+    if (userRole !== 'USER') {
+      role = Role.ANGEL;
+    }
+
     const user = {
       email,
       password: hashedPassword,
@@ -37,7 +41,9 @@ const signup = async (req, res) => {
       Address,
       birth,
       gender,
+      role,
     };
+
     const createUser = await prisma.user.create({
       data: user,
     });
@@ -46,7 +52,7 @@ const signup = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send({
-      message: 'signUp오류',
+      message: 'signUp 오류',
     });
   }
 };
