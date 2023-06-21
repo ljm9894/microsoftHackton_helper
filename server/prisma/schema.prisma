@@ -22,8 +22,11 @@ model profile {
   userId     Int
   profileImg String
   proofImg   String
-  proofInfo  String
   phoneNum   String
+  info String
+  proofName String
+  inGroup String
+
   created_at DateTime @default(now())
   user       user     @relation(fields: [userId], references: [userId], map: "Profile_userId_fkey")
 
