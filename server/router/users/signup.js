@@ -6,7 +6,7 @@ const signup = async (req, res) => {
   try {
     const { email, password, name, Address, birth, gender } = req.body;
 
-   /*const ifUser = await prisma.user.findUnique({
+   const ifUser = await prisma.user.findFirst({
     where:{
         email   
     }
@@ -18,7 +18,7 @@ const signup = async (req, res) => {
       return res.status(409).json({
         message: "이미 존재하는 이메일입니다.",
       });
-    }*/
+    }
     if (gender === null) {
       return res.status(409).json({
         message: "성별을 선택해주세요.",

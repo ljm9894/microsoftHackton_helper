@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const router = require('./router');
+
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT;
@@ -13,7 +15,7 @@ if(process.env.NODE_ENV === 'production'){
 }else{
     app.use(morgan('dev'));
 }
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended : false}));
 
