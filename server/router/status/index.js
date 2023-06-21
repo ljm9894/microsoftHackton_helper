@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router();
 const status = require('./status');
+const router = express.Router();
+const { authenticateUser } = require('../../middleware/authenticate');
 
-//router.post("/status",status);
+//router.post("/",authenticateUser,status);
 
 module.exports = router;
