@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,100 +7,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-//회원가입
-model User{
-  userId Int @id @default(autoincrement())
-  email String
-  password String
-  name String
-  created_at DateTime @default(now())
-  Address String
-  birth String
-  gender Gender
-
-  profile Profile[]
-  progress Progress[]
-  sentRequests   Request[] @relation("Sender")
-  receivedRequests Request[] @relation("Receiver")
-
-  
-  
-}
-
-//사회복지사
-model Profile{
-  profileId Int @id @default(autoincrement())
-  userId Int
-  profileImg String 
-  proofImg String
-  proofInfo String
-  phoneNum String
-  created_at DateTime @default(now())
-
-  user User @relation(fields: [userId] , references: [userId])
-}
-
-//환자
-model PatientApply{
-  applyId Int @id @default(autoincrement())
-  serviceSelect Service @default(HOMEHOSPITALHOME)
+model patientapply {
+  applyId     Int      @id @default(autoincrement())
   serviceTime DateTime
-  applyDate DateTime @default(now())
-  whereInfo String
-  HowInfo String
-  
+  applyDate   DateTime @default(now())
+  whereInfo   String
+  HowInfo     String
+  applyUser Int
+  user user @relation(fields: [applyUser], references: [userId])
 }
 
-
-model Request{
-  requestId Int @id @default(autoincrement())
-  status Req @default(Pending)
-  senderId Int
-  receiverId Int
-
-  sender User @relation("Sender",fields: [senderId], references: [userId])
-  receiver User @relation("Receiver", fields: [receiverId], references: [userId])
-
+model profile {
+  profileId  Int      @id @default(autoincrement())
+  userId     Int
+  profileImg String
+  proofImg   String
+  proofInfo  String
+  phoneNum   String
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  progress Progress[]
+  user       user     @relation(fields: [userId], references: [userId], map: "Profile_userId_fkey")
+
+  @@index([userId], map: "Profile_userId_fkey")
 }
 
-model Progress{
-  progressId Int @id @default(autoincrement())
-  userId Int 
-  requestId Int
-  status Status @default(Start)
-  updated_at DateTime @updatedAt
+model progress {
+  progressId Int             @id @default(autoincrement())
+  userId     Int
+  requestId  Int
+  status     progress_status @default(Start)
+  updated_at DateTime
+  request    request         @relation(fields: [requestId], references: [requestId], map: "Progress_requestId_fkey")
+  user       user            @relation(fields: [userId], references: [userId], map: "Progress_userId_fkey")
 
-  request Request @relation(fields: [requestId], references: [requestId])  
-  user User @relation(fields: [userId], references: [userId])
-
+  @@index([requestId], map: "Progress_requestId_fkey")
+  @@index([userId], map: "Progress_userId_fkey")
 }
 
-enum Gender{
-  MALE
-  FEMALE
+model request {
+  requestId                     Int            @id @default(autoincrement())
+  status                        request_status @default(Pending)
+  senderId                      Int
+  receiverId                    Int
+  created_at                    DateTime       @default(now())
+  updated_at                    DateTime
+  progress                      progress[]
+  user_request_receiverIdTouser user           @relation("request_receiverIdTouser", fields: [receiverId], references: [userId], map: "Request_receiverId_fkey")
+  user_request_senderIdTouser   user           @relation("request_senderIdTouser", fields: [senderId], references: [userId], map: "Request_senderId_fkey")
+
+  @@index([receiverId], map: "Request_receiverId_fkey")
+  @@index([senderId], map: "Request_senderId_fkey")
 }
 
-enum Service{
-  HOMEHOSPITALHOME
-  HOMEHOSPITAL
-  HOSPITALHOME
-  HOSPITALONLY
+model user {
+  userId                           Int         @id @default(autoincrement())
+  email                            String
+  password                         String
+  name                             String
+  created_at                       DateTime    @default(now())
+  Address                          String
+  birth                            String
+  gender                           user_gender
+  profile                          profile[]
+  progress                         progress[]
+  apply patientapply[]
+  request_request_receiverIdTouser request[]   @relation("request_receiverIdTouser")
+  request_request_senderIdTouser   request[]   @relation("request_senderIdTouser")
 }
 
-enum Req{
+enum request_status {
   Pending
   Accepted
   Declined
 }
 
-enum Status{
+enum progress_status {
   Start
   Hospital
   Finish
 }
 
-
+enum user_gender {
+  MALE
+  FEMALE
+}
