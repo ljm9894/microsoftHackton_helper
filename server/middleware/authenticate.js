@@ -17,7 +17,7 @@ exports.authenticateUser = async (req, res, next) => {
   
       // Access Token의 payload에서 사용자 정보를 가져옴
       const email = decoded.id;
-      const user = await prisma.user.findUnique({ where: { email} });
+      const user = await prisma.user.findFirst({ where: { email} });
   
       if (!user) {
         return res.status(401).json({ message: '유효하지 않은 사용자입니다.' });
@@ -30,6 +30,7 @@ exports.authenticateUser = async (req, res, next) => {
       next();
     } catch (err) {
       if(err.name = "TokenExpiredError"){
+        console.log(err);
         return res.status(401).json({ message : 'AccessToken이 만료되었습니다. 다시 로그인 해주십시오.'})
       }
       return res.status(401).json({ message: '유효하지 않은 Access Token입니다.' });

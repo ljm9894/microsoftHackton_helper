@@ -27,10 +27,11 @@ const refreshToken = async (req, res) => {
   
       res.status(200).json({ accessToken });
     } catch (err) {
+        console.log(err);
         if(err.name=== 'TokenExpiredError'){
             return res.status(401).json({ message: 'RefreshToken이 만료되었습니다.' });
         }
-        console.log(err);
+        
       return res.status(401).json({ message: '유효하지 않은 Refresh Token입니다.' });
     }
   };
