@@ -6,6 +6,8 @@ require('dotenv').config();
 const port = process.env.PORT;
 
 
+
+
 if(process.env.NODE_ENV === 'production'){
     app.use(morgan('combined'));
 }else{
@@ -14,6 +16,7 @@ if(process.env.NODE_ENV === 'production'){
 
 app.use(express.json());
 app.use(express.urlencoded({extended : false}));
+
 
 /*app.use((req,res,next) => {
     const error = new Error(`Server가 없습니다.`);
