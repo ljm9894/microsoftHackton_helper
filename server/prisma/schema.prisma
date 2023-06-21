@@ -66,6 +66,7 @@ model user {
   created_at                       DateTime    @default(now())
   Address                          String
   birth                            String
+  role Role @default(USER)
   gender                           user_gender
   profile                          profile[]
   progress                         progress[]
@@ -74,6 +75,10 @@ model user {
   request_request_senderIdTouser   request[]   @relation("request_senderIdTouser")
 }
 
+enum Role {
+  USER
+  ANGEL
+}
 enum request_status {
   Pending
   Accepted
