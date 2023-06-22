@@ -1,4 +1,4 @@
-const { PrismaClient, Role } = require('@prisma/client');
+const { PrismaClient, user_gender, Role } = require('@prisma/client');
 const prisma = new PrismaClient();
 const crypto = require('crypto');
 
@@ -40,7 +40,7 @@ const signup = async (req, res) => {
       name,
       Address,
       birth,
-      gender,
+      gender: gender === 'male' ? user_gender.MALE : user_gender.FEMALE,
       role,
     };
 
