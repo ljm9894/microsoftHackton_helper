@@ -51,7 +51,8 @@ const signup = async (req, res) => {
     return res.status(200).send({ message: "회원가입 성공" });
   } catch (err) {
     console.log(err);
-    res.status(500).send({
+    return res.status(500).send({
+      err : err,
       message: 'signUp 오류',
     });
   }
