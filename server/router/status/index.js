@@ -6,5 +6,8 @@ const accept = require('./accept');
 
 //outer.post("/",authenticateUser,status);
 router.post("/:requestId", authenticateUser, accept);
+router.post("/:requestId/progress", authenticateUser, status);
+
+
 
 module.exports = router;

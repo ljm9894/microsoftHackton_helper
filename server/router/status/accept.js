@@ -16,7 +16,7 @@ const accept = async (req, res) => {
           status: "Accepted",
         },
       });
-    } else {
+    } else if(isAccept === "false"){
       const updatedRequest = await prisma.request.update({
         where: {
           requestId: requestId,
@@ -25,6 +25,10 @@ const accept = async (req, res) => {
           status: "Declined",
         },
       });
+    }else{
+        return res.status(409).json({
+            message : "다른 데이터가 전송되었습니다."
+        })
     }
 
     return res.status(200).json({
