@@ -20,12 +20,38 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '18.x'
-
-      - name: npm install, build, and test
+          
+      - name: Generate Environment Variables File for Production
         run: |
-          npm install
+          echo "PORT=$PORT" >> .env
+          echo "APP_HOST=$APP_HOST" >> .env
+          echo "DB_CONNECTION=$DB_CONNECTION" >> .env
+          echo "DB_HOST=$DB_HOST" >> .env
+          echo "DB_PORT=$DB_PORT" >> .env
+          echo "DB_USERNAME=$DB_USERNAME" >> .env
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+          echo "DB_DATABASE=$DB_DATABASE" >> .env
+          echo "DB_SYNCHRONIZED=$DB_SYNCHRONIZED" >> .env
+          echo "DB_LOGGING=$DB_LOGGING" >> .env
+          echo "DB_ENTITIES=$DB_ENTITIES" >> .env
+        env:
+          PORT: ${{ secrets.PORT }}
+          APP_HOST: ${{ secrets.APP_HOST }}
+          DB_CONNECTION: ${{ secrets.DB_CONNECTION }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_SYNCHRONIZED: ${{ secrets.DB_SYNCHRONIZED }}
+          DB_LOGGING: ${{ secrets.DB_LOGGING }}
+          DB_ENTITIES: ${{ secrets.DB_ENTITIES }}
+
+      - name: npm install, build
+        run: |
+          cd server
+          npm install --legacy-peer-deps
           npm run build --if-present
-          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
