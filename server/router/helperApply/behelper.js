@@ -2,12 +2,12 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const behelper = async(req,res) => {
-    const { inGroup,phoneNum, profileImg, proofImg, proofName, info, proofInfo} = req.body;
+    const { inGroup,phoneNum, profileImg, proofImg, proofName, info} = req.body;
     try{
         const userId = req.user.userId
         const createBeHelper = await prisma.profile.create({
         data : {
-            proofInfo,
+            
             inGroup,
             phoneNum,
             profileImg,
